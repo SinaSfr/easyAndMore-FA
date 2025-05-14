@@ -177,92 +177,114 @@ document.addEventListener("DOMContentLoaded", function () {
   const fetchContentGallery = document.querySelector(".fetch-content-gallery");
   const galleryLi = document.querySelectorAll(".gallery-li");
 
-if (fetchContentGallery) {
-  async function firstContent() {
-    const firstDataId = galleryLi[0].getAttribute("data-id");
-    fetchContentGallery.innerHTML =
-      '<div class="flex justify-center mt-20 mb-24"><span class="loader"></span></div>';
+  const urlParams = new URLSearchParams(window.location.search);
+  const lid = urlParams.get("lid");
+  const lang = document.documentElement.getAttribute("lang");
 
-    try {
-      const firstResponse = await fetch(
-        `/gallery-image-load-items.bc?id=${firstDataId}`
-      );
-      if (!firstResponse.ok) {
-        throw new Error(`HTTP error! Status: ${firstResponse.status}`);
-      }
-      const firstData = await firstResponse.text();
-      fetchContentGallery.innerHTML = firstData;
-    } catch (error) {
-      console.error("Fetch failed:", error);
+  if (fetchContentGallery) {
+    async function firstContent() {
+      const firstDataId = galleryLi[0].getAttribute("data-id");
       fetchContentGallery.innerHTML =
-        "<p>Error loading data: " + error.message + "</p>";
-    }
+        '<div class="flex justify-center mt-20 mb-24"><span class="loader"></span></div>';
 
-    if (galleryLi.length > 0) {
-      const firstLi = galleryLi[0];
-      firstLi.style.borderRadius = "8px";
-      firstLi.style.color = "var(--secondary-700)";
-      firstLi.style.border = "1px solid var(--secondary-700)";
-
-      const svg = firstLi.querySelector("svg");
-      if (svg) svg.style.fill = "var(--secondary-700)";
-    }
-  }
-
-  firstContent();
-
-  galleryLi.forEach((item) => {
-    item.addEventListener("click", function () {
-
-      galleryLi.forEach((li) => {
-        li.style.borderRadius = "";
-        li.style.color = "";
-        li.style.border = "";
-
-        const svg = li.querySelector("svg");
-        if (svg) svg.style.fill = ""; 
-      });
-
-      item.style.borderRadius = "8px";
-      item.style.color = "var(--secondary-700)";
-      item.style.border = "1px solid var(--secondary-700)";
-
-      const svg = item.querySelector("svg");
-      if (svg) svg.style.fill = "var(--secondary-700)";
-
-      const cmsQuery = item.getAttribute("data-id");
-
-      async function secondContent() {
-        fetchContentGallery.innerHTML =
-          '<div class="flex justify-center mt-20 mb-24"><span class="loader"></span></div>';
-
-        try {
-          const firstResponse = await fetch(
-            `/gallery-image-load-items.bc?id=${cmsQuery}`
-          );
-          if (!firstResponse.ok) {
-            throw new Error(`HTTP error! Status: ${firstResponse.status}`);
-          }
-          const firstData = await firstResponse.text();
-          fetchContentGallery.innerHTML = firstData;
-        } catch (error) {
-          console.error("Fetch failed:", error);
-          fetchContentGallery.innerHTML =
-            "<p>Error loading data: " + error.message + "</p>";
-        }
+      let url = `/gallery-image-load-items.bc?id=${firstDataId}`;
+      if (lid === "1" || lang === "fa") {
+        url = `/gallery-image-load-items.bc?lid=1&id=${firstDataId}`;
+      } else if (lid === "2" || lang === "en") {
+        url = `/gallery-image-load-items.bc?lid=2&id=${firstDataId}`;
+      } else if (lid === "3" || lang === "ar") {
+        url = `/gallery-image-load-items.bc?lid=3&id=${firstDataId}`;
       }
 
-      secondContent();
-    });
-  });
-}
+      try {
+        const firstResponse = await fetch(url);
+        if (!firstResponse.ok) {
+          throw new Error(`HTTP error! Status: ${firstResponse.status}`);
+        }
+        const firstData = await firstResponse.text();
+        fetchContentGallery.innerHTML = firstData;
+      } catch (error) {
+        console.error("Fetch failed:", error);
+        fetchContentGallery.innerHTML =
+          "<p>Error loading data: " + error.message + "</p>";
+      }
 
+      if (galleryLi.length > 0) {
+        const firstLi = galleryLi[0];
+        firstLi.style.borderRadius = "8px";
+        firstLi.style.color = "var(--secondary-700)";
+        firstLi.style.border = "1px solid var(--secondary-700)";
+
+        const svg = firstLi.querySelector("svg");
+        if (svg) svg.style.fill = "var(--secondary-700)";
+      }
+    }
+
+    firstContent();
+
+    galleryLi.forEach((item) => {
+      item.addEventListener("click", function () {
+        galleryLi.forEach((li) => {
+          li.style.borderRadius = "";
+          li.style.color = "";
+          li.style.border = "";
+
+          const svg = li.querySelector("svg");
+          if (svg) svg.style.fill = "";
+        });
+
+        item.style.borderRadius = "8px";
+        item.style.color = "var(--secondary-700)";
+        item.style.border = "1px solid var(--secondary-700)";
+
+        const svg = item.querySelector("svg");
+        if (svg) svg.style.fill = "var(--secondary-700)";
+
+        const cmsQuery = item.getAttribute("data-id");
+
+        async function secondContent() {
+          fetchContentGallery.innerHTML =
+            '<div class="flex justify-center mt-20 mb-24"><span class="loader"></span></div>';
+
+          let url = `/gallery-image-load-items.bc?id=${cmsQuery}`;
+          if (lid === "1" || lang === "fa") {
+            url = `/gallery-image-load-items.bc?lid=1&id=${cmsQuery}`;
+          } else if (lid === "2" || lang === "en") {
+            url = `/gallery-image-load-items.bc?lid=2&id=${cmsQuery}`;
+          } else if (lid === "3" || lang === "ar") {
+            url = `/gallery-image-load-items.bc?lid=3&id=${cmsQuery}`;
+          }
+
+          try {
+            const firstResponse = await fetch(url);
+            if (!firstResponse.ok) {
+              throw new Error(`HTTP error! Status: ${firstResponse.status}`);
+            }
+            const firstData = await firstResponse.text();
+            fetchContentGallery.innerHTML = firstData;
+          } catch (error) {
+            console.error("Fetch failed:", error);
+            fetchContentGallery.innerHTML =
+              "<p>Error loading data: " + error.message + "</p>";
+          }
+        }
+
+        secondContent();
+      });
+    });
+  }
 });
 
 // fetch services
 document.addEventListener("DOMContentLoaded", function () {
   const toggleButtons = document.querySelectorAll(".toggleButton");
-  toggleButtons.forEach((button, index) => {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const lid = urlParams.get("lid");
+
+  const lang = document.documentElement.getAttribute("lang");
+
+  toggleButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const fetchContentArticle =
         button.parentElement.parentElement.querySelector(
@@ -272,34 +294,56 @@ document.addEventListener("DOMContentLoaded", function () {
         const cmsQuery = fetchContentArticle.getAttribute("data-catid");
 
         async function firstContent() {
-          const firstResponse = await fetch(
-            `/article-load-items.bc?catid=${cmsQuery}`
-          );
+          let url = `/article-load-items.bc?catid=${cmsQuery}`;
+
+          // شرط‌ها بر اساس lid یا lang از <html>
+          if (lid === "1" || lang === "fa") {
+            url = `/article-load-items.bc?lid=1&catid=${cmsQuery}`;
+          } else if (lid === "2" || lang === "en") {
+            url = `/article-load-items.bc?lid=2&catid=${cmsQuery}`;
+          } else if (lid === "3" || lang === "ar") {
+            url = `/article-load-items.bc?lid=3&catid=${cmsQuery}`;
+          }
+
+          const firstResponse = await fetch(url);
           const firstData = await firstResponse.text();
           fetchContentArticle.innerHTML = firstData;
         }
+
         firstContent();
       }
     });
   });
 });
 
+
 // fetch services image
 document.addEventListener("DOMContentLoaded", function () {
-  const fetchContainerArticle = document.querySelector(
-    ".fetch-container-article"
-  );
+    const fetchContainerArticle = document.querySelector(".fetch-container-article");
+
   if (fetchContainerArticle) {
     const cmsGids = fetchContainerArticle.getAttribute("data-gids");
     const cmsQueryItems = cmsGids.split(",");
     let counter = 1;
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const lid = urlParams.get("lid");
+    const lang = document.documentElement.getAttribute("lang");
+
     async function fetchItemsInOrder() {
       for (const cmsQueryItem of cmsQueryItems) {
-        const firstResponse = await fetch(
-          `/article-image-load-items.bc?id=${cmsQueryItem}`
-        );
 
+        let url = `/article-image-load-items.bc?id=${cmsQueryItem}`;
+
+        if (lid === "1" || lang === "fa") {
+          url = `/article-image-load-items.bc?lid=1&id=${cmsQueryItem}`;
+        } else if (lid === "2" || lang === "en") {
+          url = `/article-image-load-items.bc?lid=2&id=${cmsQueryItem}`;
+        } else if (lid === "3" || lang === "ar") {
+          url = `/article-image-load-items.bc?lid=3&id=${cmsQueryItem}`;
+        }
+
+        const firstResponse = await fetch(url);
         const firstData = await firstResponse.text();
 
         const fetchContentArticleImage = document.querySelector(
@@ -308,6 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (fetchContentArticleImage) {
           fetchContentArticleImage.innerHTML = firstData;
         }
+
         counter++;
       }
     }

@@ -1,13 +1,13 @@
-<basis core="dbsource" source="basiscore" lid="2" mid="1" name="db" catid="212642">
+<basis core="dbsource" source="basiscore" lid="1" mid="1" name="db" catid="212642">
     <member name="trip-paris" type="list" link="article.bc" order="ord" size="620x150" propertyid="7244" />
 </basis>
-<basis core="dbsource" source="media" lid="2" name="db" usedforid="2376025" sourcemid="article">
+<basis core="dbsource" source="media" lid="1" name="db" usedforid="2376025" sourcemid="article">
     <member type="list" name="main-images" format="4" order="ord"></member>
 </basis>
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 
 <head>
 
@@ -58,12 +58,12 @@
     <meta name="enamad" content="" />
     <meta name="samandehi" content="" />
     <!-- pwa metatags -->
-    <basis core="call" file="pwa.inc" lid="2" />
+    <basis core="call" file="pwa.inc" lid="1" />
     <!-- define -->
     <link rel="preload" as="image" imageSrcSet="image address" fetchpriority="high" />
     <!-- common styles for all page -->
     <link rel="stylesheet" href="[##cms.cms.cdn##]/_css/swiper-bundle.min.css" />
-    <basis core="call" file="style.inc" lid="2" />
+    <basis core="call" file="style.inc" lid="1" />
 </head>
 <style>
     .Basis_Calendar {
@@ -138,6 +138,23 @@
     .calendar-footer ::placeholder {
         font-family: "Dana";
     }
+
+    /* .Basis_Calendar .month_day_list table .disable_day:hover,
+    .Basis_Calendar .month_day_list table .empty_day:hover {
+        background: #fff !important
+    }
+
+    .Basis_Calendar .month_day_list table td:hover {
+        background-color: #1f1d4e;
+    }
+
+    .Basis_Calendar .month_day_list table td:hover .basis_s_day {
+        color: #fff;
+    }
+
+    .Basis_Calendar .month_day_list table td:hover .basis_m_day {
+        color: #fff;
+    } */
 
     .search-box-container input,
     .search-box-container select,
@@ -247,7 +264,7 @@
     .reserve-field.passengers-field>div:first-of-type {
         display: flex;
         align-items: center;
-        padding: 0 8px 0 0 !important;
+        padding: 0 !important;
     }
 
     .reserve-field.departure-route>div:first-of-type {
@@ -272,12 +289,12 @@
         top: -32px;
         font-size: 16px;
         color: white;
-        left: 0;
+        right: 0;
     }
 
     .Basis_Date.end_date,
     .Basis_Date.start_date {
-        padding: 0 0 0 8px !important;
+        padding: 0 8px 0 0 !important;
     }
 
     /* .Basis_Calendar_Box{
@@ -303,6 +320,10 @@
     .ul-list ul li:hover {
         background-color: var(--primary-50);
         transition: all 300ms ease;
+    }
+
+    .ul-list ul li {
+        text-align: right !important;
     }
 
     .passenger-item.adult-passenger-item,
@@ -400,7 +421,7 @@
 
 <body>
 
-    <basis core="call" file="header.inc" lid="2" />
+    <basis core="call" file="header.inc" lid="1" />
 
     <main>
         <section>
@@ -471,9 +492,8 @@
             </div>
             <!-- search engine  -->
             <section class="mx-auto rounded-lg z-10 max-xl:w-[97%] xl:max-w-7xl min-h-[151px] -mt-56 mb-20">
-                <div
-                    class="w-full search-box-container en">
-                    <div id="search-box" class="dir-ltr">
+                <div class="w-full search-box-container">
+                    <div id="search-box" class="dir-rtl">
                         <div class="flex justify-center"><span class="loader"></span></div>
                     </div>
                 </div>
@@ -502,8 +522,8 @@
                                             @prp_7244
                                         </div>
                                         <a href="/article.bc?id=@id"
-                                            class="self-end flex-1 transition-all duration-300 text-secondary-600 hover:text-primary-800">View
-                                            more</a>
+                                            class="self-end flex-1 transition-all duration-300 text-secondary-600 hover:text-primary-800">مشاهده
+                                            بیشتر</a>
                                     </div>
                                 </div>
                                 <img src="@00620X00150prp" alt="@title" width="100%" height="112px"
@@ -521,8 +541,8 @@
                                             @prp_7244
                                         </div>
                                         <a href="@link"
-                                            class="self-end flex-1 transition-all duration-300 text-secondary-600 hover:text-primary-800">View
-                                            more</a>
+                                            class="self-end flex-1 transition-all duration-300 text-secondary-600 hover:text-primary-800">مشاهده
+                                            بیشتر</a>
                                     </div>
                                 </div>
                                 <img src="@00620X00150prp" alt="@title" width="100%" height="112px"
@@ -538,9 +558,8 @@
     </main>
 
     <script src="[##cms.cms.cdn##]/_js/swiper-bundle.11.2.5.min.js"></script>
-    <!-- <script>
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
-
             const isDesktop = window.innerWidth > 1024;
             const requiredFiles = isDesktop
                 ? ["moreAndEasy.ui.min.css"]
@@ -558,8 +577,21 @@
             if (document.getElementById("search-box")) {
                 function fetchEngine() {
                     try {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const lid = urlParams.get("lid");
+                        const lang = document.documentElement.getAttribute("lang");
+
+                        let url = "test-search-engine.bc";
+                        if (lid === "1" || lang === "fa") {
+                            url += "?lid=1";
+                        } else if (lid === "2" || lang === "en") {
+                            url += "?lid=2";
+                        } else if (lid === "3" || lang === "ar") {
+                            url += "?lid=3";
+                        }
+
                         const xhrobj = new XMLHttpRequest();
-                        xhrobj.open("GET", "test-search-engine.bc");
+                        xhrobj.open("GET", url);
                         xhrobj.send();
 
                         xhrobj.onreadystatechange = function () {
@@ -592,15 +624,14 @@
                         setTimeout(waitForFiles, 500);
                     }
                 }
+
                 waitForFiles();
             }
-
-
-
         });
-    </script> -->
-        <basis core="call" file="Client_RkeyScript.inc" lid="2"></basis>
-    <basis core="call" file="footer.inc" lid="2" />
+
+    </script>
+    <basis core="call" file="Client_RkeyScript.inc" lid="1"></basis>
+    <basis core="call" file="footer.inc" lid="1" />
 
 
 
