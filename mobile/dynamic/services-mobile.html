@@ -1,44 +1,44 @@
-<basis core="dbsource" source="basiscore" name="db" lid="2" mid="1" usedforid="[##cms.query.id##]">
+<basis core="dbsource" source="basiscore" name="db" lid="1" mid="1" usedforid="[##cms.query.id##]">
   <member request="json-ld" type="scalar" name="json" />
 </basis>
-<basis core="dbsource" source="basiscore" lid="2" mid="1" name="db" usedforid="[##cms.query.id##]">
+<basis core="dbsource" source="basiscore" lid="1" mid="1" name="db" usedforid="[##cms.query.id##]">
   <member name="articles" type="view" />
 </basis>
-<basis core="dbsource" source="media" lid="2" name="db" usedforid="[##cms.query.id##]" sourcemid="article">
+<basis core="dbsource" source="media" lid="1" name="db" usedforid="[##cms.query.id##]" sourcemid="article">
   <member type="list" name="gallery" format="4" order="ord"></member>
 </basis>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no,viewport-fit=cover">
   <!-- Title & Description -->
   <title>[##cms.seo.title|(More and Easy Travel Agency)##]</title>
-  <meta name="description" content="[##cms.seo.description|(Experience the best and easiets trip with More and Easy Travel Agency.)##]">
+  <meta name="description"
+    content="[##cms.seo.description|(بهترین و آسان ترین سفر را با آژانس مسافرتی More and Easy تجربه کنید.)##]">
   <!-- Title & Description -->
   <basis core="dbsource" source="hosting" name="tag" urlid="[##cms.seo.urlid##]">
-      <member type="list" name="list" request="taglist" preview=""></member>
+    <member type="list" name="list" request="taglist" preview=""></member>
   </basis>
   <basis core="print" datamembername="tag.list">
-      <face filter="key = 'canonical'">
-          <link rel="canonical" href="@value" />
-      </face>
-      <face>
-          <meta property="@key" content="@value" />
-      </face>
+    <face filter="key = 'canonical'">
+      <link rel="canonical" href="@value" />
+    </face>
+    <face>
+      <meta property="@key" content="@value" />
+    </face>
   </basis>
   <!-- pwa metatags -->
-<basis core="call" file="pwa.inc" lid="2" pageindex="[##cms.cms.pageindex##]"/>
+  <basis core="call" file="pwa.inc" lid="1" pageindex="[##cms.cms.pageindex##]" />
   <!-- common styles for all page -->
-  <link rel="stylesheet" href="https://cdn.basiscore.net/basisfly.com/css/swiper-bundle.min.css" />
-  <link href="https://cdn.basiscore.net/basisfly.com/css/reservation_tem_calendar_en.css" type="text/css" rel="stylesheet" />
-  <basis core="call" file="style.inc" lid="2" pageindex="[##cms.cms.pageindex##]"/>
+  <link rel="stylesheet" href="[##cms.cms.cdn##]/_css/swiper-bundle.min.css" />
+  <basis core="call" file="style.inc" lid="1" pageindex="[##cms.cms.pageindex##]" />
 </head>
 
 <body class="article-bc">
-  <basis core="call" file="header.inc" lid="2" pageindex="[##cms.cms.pageindex##]"/>
+  <basis core="call" file="header.inc" lid="1" pageindex="[##cms.cms.pageindex##]"/>
 
   <main>
       <section class="max-lg:w-[95%] mx-auto mb-20 mt-8">
@@ -113,7 +113,7 @@
                   </face>
                   
                 </basis>
-                <div class="mt-4 text-sm text-center text-blue-600 see-more-btn">See More</div>
+                <div class="mt-4 text-sm text-center text-blue-600 see-more-btn">مشاهده بیشتر</div>
                 <basis core="print" datamembername="db.articles">
                   <layout> @child 
                     
@@ -126,8 +126,8 @@
       </section>
   </main>
 
-  <script src="https://cdn.basiscore.net/basisfly.com/js/swiper-bundle.min.js"></script>
-  <basis core="call" file="footer.inc" lid="2" pageindex="[##cms.cms.pageindex##]"/>
+  <script src="[##cms.cms.cdn##]/_js/swiper-bundle.11.2.5.min.js"></script>
+  <basis core="call" file="footer.inc" lid="1" pageindex="[##cms.cms.pageindex##]"/>
 
 </body>
 

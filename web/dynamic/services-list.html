@@ -1,8 +1,8 @@
-<basis core="dbsource" source="basiscore" lid="2" mid="18" name="db" usedforid="[##cms.query.catid##]">
+<basis core="dbsource" source="basiscore" lid="1" mid="18" name="db" usedforid="[##cms.query.catid##]">
     <member name="scalar" type="scalar" typeid="150" />
   </basis>
   
-  <basis core="dbsource" source="basiscore" lid="2" mid="1" name="services-item">
+  <basis core="dbsource" source="basiscore" lid="1" mid="1" name="services-item">
     <member
       name="cat"
       type="tree"
@@ -13,37 +13,37 @@
   </basis>
   
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="fa" dir="rtl">
   
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no,viewport-fit=cover">
     <!-- Title & Description -->
     <title>[##cms.seo.title|(More and Easy Travel Agency)##]</title>
-    <meta name="description" content="[##cms.seo.description|(Experience the best and easiets trip with More and Easy Travel Agency.)##]">
+    <meta name="description"
+      content="[##cms.seo.description|(بهترین و آسان ترین سفر را با آژانس مسافرتی More and Easy تجربه کنید.)##]">
     <!-- Title & Description -->
     <basis core="dbsource" source="hosting" name="tag" urlid="[##cms.seo.urlid##]">
-        <member type="list" name="list" request="taglist" preview=""></member>
+      <member type="list" name="list" request="taglist" preview=""></member>
     </basis>
     <basis core="print" datamembername="tag.list">
-        <face filter="key = 'canonical'">
-            <link rel="canonical" href="@value" />
-        </face>
-        <face>
-            <meta property="@key" content="@value" />
-        </face>
+      <face filter="key = 'canonical'">
+        <link rel="canonical" href="@value" />
+      </face>
+      <face>
+        <meta property="@key" content="@value" />
+      </face>
     </basis>
     <!-- pwa metatags -->
-  <basis core="call" file="pwa.inc" lid="2"/>
+    <basis core="call" file="pwa.inc" lid="1" />
     <!-- common styles for all page -->
-    <link rel="stylesheet" href="https://cdn.basiscore.net/basisfly.com/css/swiper-bundle.min.css" />
-    <link href="https://cdn.basiscore.net/basisfly.com/css/reservation_tem_calendar_en.css" type="text/css" rel="stylesheet" />
-    <basis core="call" file="style.inc" lid="2"/>
+    <link rel="stylesheet" href="[##cms.cms.cdn##]/_css/swiper-bundle.min.css" />
+    <basis core="call" file="style.inc" lid="1" />
   </head>
   
   
   <body>
-      <basis core="call" file="header.inc" lid="2"/>
+      <basis core="call" file="header.inc" lid="1"/>
   
     <main>
       <section class=" mx-auto max-xl:w-[97%] xl:max-w-7xl mt-20 mb-24 flex flex-col gap-6">
@@ -120,8 +120,79 @@
     </main>
   
   
-    <script src="https://cdn.basiscore.net/basisfly.com/js/swiper-bundle.min.js"></script>
-    <basis core="call" file="footer.inc" lid="2"/>
+    <script src="[##cms.cms.cdn##]/_js/swiper-bundle.11.2.5.min.js"></script>
+    <script>
+      const sliders = document.querySelectorAll(".slider");
+const prevButtons = document.querySelectorAll(".prev");
+const nextButtons = document.querySelectorAll(".next");
+const intervalTime = 3000;
+let intervals = new Map();
+
+function updateSlider(slider, currentIndex) {
+  const slides = slider.querySelector(".slides");
+  const slideWidth = slides.querySelector(".slide").clientWidth;
+  const isRTL = getComputedStyle(slider).direction === "rtl";
+
+  // اگر RTL باشد، جهت جابه‌جایی برعکس است
+  const offset = (isRTL ? 1 : -1) * currentIndex * slideWidth;
+  slides.style.transform = `translateX(${offset}px)`;
+}
+
+function nextSlide(event, manual = false) {
+  const slider = event ? event.target.closest(".slider") : this;
+  const slideItems = slider.querySelectorAll(".slide");
+  const slideCount = slideItems.length;
+  let currentIndex = parseInt(slider.getAttribute("data-current-index")) || 0;
+  currentIndex = (currentIndex + 1) % slideCount;
+  slider.setAttribute("data-current-index", currentIndex);
+  updateSlider(slider, currentIndex);
+
+  if (manual) restartAutoSlide(slider);
+}
+
+function prevSlide(event) {
+  const slider = event.target.closest(".slider");
+  const slideItems = slider.querySelectorAll(".slide");
+  const slideCount = slideItems.length;
+  let currentIndex = parseInt(slider.getAttribute("data-current-index")) || 0;
+  currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+  slider.setAttribute("data-current-index", currentIndex);
+  updateSlider(slider, currentIndex);
+
+  restartAutoSlide(slider);
+}
+
+function startAutoSlide(slider) {
+  if (intervals.has(slider)) clearInterval(intervals.get(slider));
+
+  const interval = setInterval(
+    () => nextSlide.call(slider, null, false),
+    intervalTime
+  );
+  intervals.set(slider, interval);
+}
+
+function restartAutoSlide(slider) {
+  if (intervals.has(slider)) {
+    clearInterval(intervals.get(slider));
+    startAutoSlide(slider);
+  }
+}
+
+nextButtons.forEach((nextButton) => {
+  nextButton.addEventListener("click", (event) => nextSlide(event, true));
+});
+
+prevButtons.forEach((prevButton) => {
+  prevButton.addEventListener("click", prevSlide);
+});
+
+sliders.forEach((slider) => {
+  startAutoSlide(slider);
+});
+
+    </script>
+    <basis core="call" file="footer.inc" lid="1"/>
   
   
   

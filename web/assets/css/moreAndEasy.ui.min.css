@@ -1081,6 +1081,12 @@ body {
 .self-end {
   align-self: flex-end;
 }
+.min-h-20 {
+  min-height: 5rem /* 80px */;
+}
+.min-h-\[151px\] {
+  min-height: 151px;
+}
 .h-\[420px\] {
   height: 420px;
 }

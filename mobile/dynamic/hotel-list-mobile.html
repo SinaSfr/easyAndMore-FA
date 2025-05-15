@@ -1,19 +1,19 @@
-<basis core="dbsource" source="basiscore" lid="2" mid="1" name="db" catid="212486">
+<basis core="dbsource" source="basiscore" lid="1" mid="1" name="db" catid="212486">
   <member name="hotel-list" type="list" link="article.bc" order="ord" size="387x220" propertyid="3087418,3087419"
     pageno="[##cms.query.pagenum|(1)##]" perpage="12" />
   <member name="paging" type="list" request="paging" count="3" parentname="hotel-list" />
 </basis>
-<basis core="dbsource" source="basiscore" lid="2" mid="18" name="db" usedforid="[##cms.query.catid##]">
+<basis core="dbsource" source="basiscore" lid="1" mid="18" name="db" usedforid="[##cms.query.catid##]">
   <member name="scalar" type="scalar" typeid="150" />
 </basis>
-<basis core="dbsource" source="basiscore" lid="2" mid="1" name="db" catid="[##cms.query.catid##]">
+<basis core="dbsource" source="basiscore" lid="1" mid="1" name="db" catid="[##cms.query.catid##]">
   <member name="navigation" type="tree" request="navcatid" parentid="[##cms.query.catid##]" />
 </basis>
-<basis core="dbsource" source="basiscore" name="db" mid="1" lid="2" usedforid="2371080">
+<basis core="dbsource" source="basiscore" name="db" mid="1" lid="1" usedforid="2371080">
   <member name="faq" type="view" propertyid="" postsql="select * from [db.faq] where TypeID<>150 " />
   <member name="faqtitle" type="view" propertyid="" postsql="select * from [db.faqtitle] where TypeID=150 " />
 </basis>
-<basis core="dbsource" source="media" lid="2" name="db" usedforid="2377592" sourcemid="article">
+<basis core="dbsource" source="media" lid="1" name="db" usedforid="2377592" sourcemid="article">
   <member type="list" name="first-image" format="4" order="ord"></member>
 </basis>
 
@@ -26,7 +26,7 @@
   <!-- Title & Description -->
   <title>[##cms.seo.title|(More and Easy Travel Agency)##]</title>
   <meta name="description"
-    content="[##cms.seo.description|(Experience the best and easiets trip with More and Easy Travel Agency.)##]">
+    content="[##cms.seo.description|(بهترین و آسان ترین سفر را با آژانس مسافرتی More and Easy تجربه کنید.)##]">
   <!-- Title & Description -->
   <basis core="dbsource" source="hosting" name="tag" urlid="[##cms.seo.urlid##]">
     <member type="list" name="list" request="taglist" preview=""></member>
@@ -40,16 +40,14 @@
     </face>
   </basis>
   <!-- pwa metatags -->
-  <basis core="call" file="pwa.inc" lid="2" />
+  <basis core="call" file="pwa.inc" lid="1" pageindex="[##cms.cms.pageindex##]" />
   <!-- common styles for all page -->
   <link rel="stylesheet" href="[##cms.cms.cdn##]/_css/swiper-bundle.min.css" />
-  <link href="https://cdn.basiscore.net/basisfly.com/css/reservation_tem_calendar_en.css" type="text/css"
-    rel="stylesheet" />
-  <basis core="call" file="style.inc" lid="2" pageindex="[##cms.cms.pageindex##]" />
+  <basis core="call" file="style.inc" lid="1" pageindex="[##cms.cms.pageindex##]" />
 </head>
 
 <body onload="loadContentHomePage()">
-  <basis core="call" file="header.inc" lid="2" pageindex="[##cms.cms.pageindex##]" />
+  <basis core="call" file="header.inc" lid="1" pageindex="[##cms.cms.pageindex##]" />
 
   <main>
     <section>
@@ -130,7 +128,7 @@
                 <h2 class="mb-2 font-bold text-zinc-900">@title</h2>
                 <img src="./_images/@prp_3087418star.png" alt="1Star" loading="lazy">
               </div>
-              <a href="/article.bc?id=@id" class="flex justify-center mt-6 text-sm text-primary-800">Go Now</a>
+              <a href="/article.bc?id=@id" class="flex justify-center mt-6 text-sm text-primary-800">مشاهده هتل</a>
             </div>
           </div>
         </face>
@@ -148,7 +146,7 @@
                 <h2 class="mb-2 font-bold text-zinc-900">@title</h2>
                 <img src="./_images/@prp_3087418star.png" alt="1Star" loading="lazy">
               </div>
-              <a href="@link" class="flex justify-center mt-6 text-sm text-primary-800">Go Now</a>
+              <a href="@link" class="flex justify-center mt-6 text-sm text-primary-800">مشاهده هتل</a>
             </div>
           </div>
         </face>
@@ -156,7 +154,7 @@
 
 
       <div id="paging" class="flex justify-center mt-8">
-        <ul class="flex items-center gap-2 cd-pagination no-space dir-ltr" id="wibpaging">
+        <ul class="flex items-center gap-2 cd-pagination no-space direction-ltr" id="wibpaging">
           <basis core="print" datamembername="db.paging">
             <face filter="(@sta='pre')and('[##cms.cms.pageurl##]'='')">
               <li
@@ -293,9 +291,8 @@
   </main>
 
   <script src="[##cms.cms.cdn##]/_js/swiper-bundle.11.2.5.min.js"></script>
-  <basis core="call" file="Client_RkeyScript.inc" lid="2"></basis>
-  <script src="[##cms.cms.cdn##]/_js/jquery/jquery-3.7.1.min.js" type="text/javascript"></script>
-  <basis core="call" file="footer.inc" lid="2" pageindex="[##cms.cms.pageindex##]" />
+  <basis core="call" file="Client_RkeyScript.inc" lid="1"></basis>
+  <basis core="call" file="footer.inc" lid="1" pageindex="[##cms.cms.pageindex##]" />
 
 </body>
 
