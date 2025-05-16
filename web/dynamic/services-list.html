@@ -75,7 +75,7 @@
               </div>
       
               <!-- Slider main container -->
-              <div class="relative flex justify-center slider slider-container lg:flex-[3] xl:flex-[1.7]" >
+              <div class="relative flex justify-center slider slider-container lg:flex-[3] xl:flex-[1.7]" data-current-index="0">
                 <!-- Additional required wrapper -->
                 <div class="slider-wrapper fetch-content-article-image-@RowNumber">
   
@@ -121,77 +121,7 @@
   
   
     <script src="[##cms.cms.cdn##]/_js/swiper-bundle.11.2.5.min.js"></script>
-    <script>
-      const sliders = document.querySelectorAll(".slider");
-const prevButtons = document.querySelectorAll(".prev");
-const nextButtons = document.querySelectorAll(".next");
-const intervalTime = 3000;
-let intervals = new Map();
 
-function updateSlider(slider, currentIndex) {
-  const slides = slider.querySelector(".slides");
-  const slideWidth = slides.querySelector(".slide").clientWidth;
-  const isRTL = getComputedStyle(slider).direction === "rtl";
-
-  // اگر RTL باشد، جهت جابه‌جایی برعکس است
-  const offset = (isRTL ? 1 : -1) * currentIndex * slideWidth;
-  slides.style.transform = `translateX(${offset}px)`;
-}
-
-function nextSlide(event, manual = false) {
-  const slider = event ? event.target.closest(".slider") : this;
-  const slideItems = slider.querySelectorAll(".slide");
-  const slideCount = slideItems.length;
-  let currentIndex = parseInt(slider.getAttribute("data-current-index")) || 0;
-  currentIndex = (currentIndex + 1) % slideCount;
-  slider.setAttribute("data-current-index", currentIndex);
-  updateSlider(slider, currentIndex);
-
-  if (manual) restartAutoSlide(slider);
-}
-
-function prevSlide(event) {
-  const slider = event.target.closest(".slider");
-  const slideItems = slider.querySelectorAll(".slide");
-  const slideCount = slideItems.length;
-  let currentIndex = parseInt(slider.getAttribute("data-current-index")) || 0;
-  currentIndex = (currentIndex - 1 + slideCount) % slideCount;
-  slider.setAttribute("data-current-index", currentIndex);
-  updateSlider(slider, currentIndex);
-
-  restartAutoSlide(slider);
-}
-
-function startAutoSlide(slider) {
-  if (intervals.has(slider)) clearInterval(intervals.get(slider));
-
-  const interval = setInterval(
-    () => nextSlide.call(slider, null, false),
-    intervalTime
-  );
-  intervals.set(slider, interval);
-}
-
-function restartAutoSlide(slider) {
-  if (intervals.has(slider)) {
-    clearInterval(intervals.get(slider));
-    startAutoSlide(slider);
-  }
-}
-
-nextButtons.forEach((nextButton) => {
-  nextButton.addEventListener("click", (event) => nextSlide(event, true));
-});
-
-prevButtons.forEach((prevButton) => {
-  prevButton.addEventListener("click", prevSlide);
-});
-
-sliders.forEach((slider) => {
-  startAutoSlide(slider);
-});
-
-    </script>
     <basis core="call" file="footer.inc" lid="1"/>
   
   

@@ -296,7 +296,6 @@ document.addEventListener("DOMContentLoaded", function () {
         async function firstContent() {
           let url = `/article-load-items.bc?catid=${cmsQuery}`;
 
-          // شرط‌ها بر اساس lid یا lang از <html>
           if (lid === "1" || lang === "fa") {
             url = `/article-load-items.bc?lid=1&catid=${cmsQuery}`;
           } else if (lid === "2" || lang === "en") {
@@ -430,71 +429,95 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const sliders = document.querySelectorAll(".slider");
-  const prevButtons = document.querySelectorAll(".prev");
-  const nextButtons = document.querySelectorAll(".next");
-  const intervalTime = 3000;
-  let intervals = new Map();
+const prevButtons = document.querySelectorAll(".prev");
+const nextButtons = document.querySelectorAll(".next");
+const intervalTime = 3000;
+let intervals = new Map();
 
-  function updateSlider(slider, currentIndex) {
-    const slides = slider.querySelector(".slides");
-    const slideWidth = slides.querySelector(".slide").clientWidth;
-    const offset = -currentIndex * slideWidth;
-    slides.style.transform = `translateX(${offset}px)`;
-  }
+const lang = document.documentElement.getAttribute("lang");
 
-  function nextSlide(event, manual = false) {
-    const slider = event ? event.target.closest(".slider") : this;
-    const slideItems = slider.querySelectorAll(".slide");
-    const slideCount = slideItems.length;
-    let currentIndex = parseInt(slider.getAttribute("data-current-index")) || 0;
-    currentIndex = (currentIndex + 1) % slideCount;
-    slider.setAttribute("data-current-index", currentIndex);
-    updateSlider(slider, currentIndex);
+const urlParams = new URLSearchParams(window.location.search);
+const lid = urlParams.get("lid");
 
-    if (manual) restartAutoSlide(slider);
-  }
 
-  function prevSlide(event) {
-    const slider = event.target.closest(".slider");
-    const slideItems = slider.querySelectorAll(".slide");
-    const slideCount = slideItems.length;
-    let currentIndex = parseInt(slider.getAttribute("data-current-index")) || 0;
-    currentIndex = (currentIndex - 1 + slideCount) % slideCount;
-    slider.setAttribute("data-current-index", currentIndex);
-    updateSlider(slider, currentIndex);
+const isRTL = lang === "fa" || lang === "ar";
 
-    restartAutoSlide(slider);
-  }
+function updateSlider(slider, currentIndex) {
+  const slides = slider.querySelector(".slides");
+  const slideWidth = slides.querySelector(".slide").clientWidth;
 
-  function startAutoSlide(slider) {
-    if (intervals.has(slider)) clearInterval(intervals.get(slider));
 
-    const interval = setInterval(
-      () => nextSlide.call(slider, null, false),
-      intervalTime
-    );
-    intervals.set(slider, interval);
-  }
+  const offset = isRTL
+    ? currentIndex * slideWidth   
+    : -currentIndex * slideWidth; 
 
-  function restartAutoSlide(slider) {
-    if (intervals.has(slider)) {
-      clearInterval(intervals.get(slider));
-      startAutoSlide(slider);
-    }
-  }
+  slides.style.transform = `translateX(${offset}px)`;
+}
 
-  nextButtons.forEach((nextButton) => {
-    nextButton.addEventListener("click", (event) => nextSlide(event, true));
-  });
+function nextSlide(event, manual = false) {
+  const slider = event ? event.target.closest(".slider") : this;
+  const slideItems = slider.querySelectorAll(".slide");
+  const slideCount = slideItems.length;
 
-  prevButtons.forEach((prevButton) => {
-    prevButton.addEventListener("click", prevSlide);
-  });
+  let currentIndex = parseInt(slider.dataset.currentIndex) || 0;
+  
+  currentIndex = (currentIndex + 1) % slideCount;
+  
+  slider.dataset.currentIndex = currentIndex;
+  
+  updateSlider(slider, currentIndex);
 
-  sliders.forEach((slider) => {
+  if (manual) restartAutoSlide(slider);
+}
+
+function prevSlide(event) {
+  const slider = event.target.closest(".slider");
+  const slideItems = slider.querySelectorAll(".slide");
+  const slideCount = slideItems.length;
+
+  let currentIndex = parseInt(slider.dataset.currentIndex) || 0;
+
+  currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+
+  slider.dataset.currentIndex = currentIndex;
+
+  updateSlider(slider, currentIndex);
+
+  restartAutoSlide(slider);
+}
+
+function startAutoSlide(slider) {
+  if (intervals.has(slider)) clearInterval(intervals.get(slider));
+
+  const interval = setInterval(
+    () => nextSlide.call(slider, null, false),
+    intervalTime
+  );
+  intervals.set(slider, interval);
+}
+
+function restartAutoSlide(slider) {
+  if (intervals.has(slider)) {
+    clearInterval(intervals.get(slider));
     startAutoSlide(slider);
-  });
+  }
+}
+
+nextButtons.forEach((nextButton) => {
+  nextButton.addEventListener("click", (event) => nextSlide(event, true));
 });
+
+prevButtons.forEach((prevButton) => {
+  prevButton.addEventListener("click", prevSlide);
+});
+
+sliders.forEach((slider) => {
+  startAutoSlide(slider);
+});
+  
+  });
+  
+
 
 if (document.querySelectorAll(".see-more-btn")) {
   document.addEventListener("DOMContentLoaded", function () {
@@ -527,70 +550,139 @@ if (document.querySelectorAll(".see-more-btn")) {
   });
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+const lid = urlParams.get("lid");
+const lang = document.documentElement.getAttribute("lang");
+
 function uploadDocumentFooter(args) {
-  document.querySelector("#contact-form-resize .Loading_Form").style.display =
-    "block";
-  const captcha = document
-    .querySelector("#contact-form-resize")
-    .querySelector("#captchaContainer input[name='captcha']").value;
-  const captchaid = document
-    .querySelector("#contact-form-resize")
-    .querySelector("#captchaContainer input[name='captchaid']").value;
-  const stringJson = JSON.stringify(args.source?.rows[0]);
-  $bc.setSource("cms.uploadFooter", {
-    value: stringJson,
-    captcha: captcha,
-    captchaid: captchaid,
-    run: true,
-  });
+  if ((lid === "1" || lang === "fa")) {
+    document.querySelector("#contact-form-resize .Loading_Form").style.display = "block";
+    const captcha = document.querySelector("#contact-form-resize #captchaContainer input[name='captcha']").value;
+    const captchaid = document.querySelector("#contact-form-resize #captchaContainer input[name='captchaid']").value;
+    const stringJson = JSON.stringify(args.source?.rows[0]);
+    $bc.setSource("cms.uploadFooter", {
+      value: stringJson,
+      captcha: captcha,
+      captchaid: captchaid,
+      run: true,
+    });
+  } else if ((lid === "2" || lang === "en")) {
+    document.querySelector("#contact-form-resize .Loading_Form").style.display = "block";
+    const captcha = document.querySelector("#contact-form-resize #captchaContainer input[name='captcha']").value;
+    const captchaid = document.querySelector("#contact-form-resize #captchaContainer input[name='captchaid']").value;
+    const stringJson = JSON.stringify(args.source?.rows[0]);
+    $bc.setSource("cms.uploadFooter", {
+      value: stringJson,
+      captcha: captcha,
+      captchaid: captchaid,
+      run: true,
+    });
+  } else if ((lid === "3" || lang === "ar")) {
+    document.querySelector("#contact-form-resize .Loading_Form").style.display = "block";
+    const captcha = document.querySelector("#contact-form-resize #captchaContainer input[name='captcha']").value;
+    const captchaid = document.querySelector("#contact-form-resize #captchaContainer input[name='captchaid']").value;
+    const stringJson = JSON.stringify(args.source?.rows[0]);
+    $bc.setSource("cms.uploadFooter", {
+      value: stringJson,
+      captcha: captcha,
+      captchaid: captchaid,
+      run: true,
+    });
+  }
 }
 
 function refreshCaptchaFooter(e) {
-  $bc.setSource("captcha.refreshFooter", true);
+  if ((lid === "1" || lang === "fa") || (lid === "2" || lang === "en") || (lid === "3" || lang === "ar")) {
+    $bc.setSource("captcha.refreshFooter", true);
+  }
 }
 
 async function OnProcessedEditObjectFooter(args) {
-  var response = args.response;
-  var json = await response.json();
-  var errorid = json.errorid;
-  if (errorid == "6") {
-    document.querySelector("#contact-form-resize .Loading_Form").style.display =
-      "none";
-    document.querySelector("#contact-form-resize .message-api").innerHTML =
-      "Your request has been successfully registered.";
-  } else {
-    refreshCaptchaFooter();
-    setTimeout(() => {
-      document.querySelector(
-        "#contact-form-resize .Loading_Form"
-      ).style.display = "none";
-      document.querySelector("#contact-form-resize .message-api").innerHTML =
-        "An error occurred, please try again.";
-    }, 2000);
+  if ((lid === "1" || lang === "fa")) {
+    var response = args.response;
+    var json = await response.json();
+    var errorid = json.errorid;
+    if (errorid == "6") {
+      document.querySelector("#contact-form-resize .Loading_Form").style.display = "none";
+      document.querySelector("#contact-form-resize .message-api").innerHTML = "درخواست شما با موفقیت ثبت شد.";
+    } else {
+      refreshCaptchaFooter();
+      setTimeout(() => {
+        document.querySelector("#contact-form-resize .Loading_Form").style.display = "none";
+        document.querySelector("#contact-form-resize .message-api").innerHTML = "خطایی رخ داد، لطفاً دوباره تلاش کنید.";
+      }, 2000);
+    }
+  } else if ((lid === "2" || lang === "en")) {
+    var response = args.response;
+    var json = await response.json();
+    var errorid = json.errorid;
+    if (errorid == "6") {
+      document.querySelector("#contact-form-resize .Loading_Form").style.display = "none";
+      document.querySelector("#contact-form-resize .message-api").innerHTML = "Your request has been successfully registered.";
+    } else {
+      refreshCaptchaFooter();
+      setTimeout(() => {
+        document.querySelector("#contact-form-resize .Loading_Form").style.display = "none";
+        document.querySelector("#contact-form-resize .message-api").innerHTML = "An error occurred, please try again.";
+      }, 2000);
+    }
+  } else if ((lid === "3" || lang === "ar")) {
+    var response = args.response;
+    var json = await response.json();
+    var errorid = json.errorid;
+    if (errorid == "6") {
+      document.querySelector("#contact-form-resize .Loading_Form").style.display = "none";
+      document.querySelector("#contact-form-resize .message-api").innerHTML = "تم تسجيل طلبك بنجاح.";
+    } else {
+      refreshCaptchaFooter();
+      setTimeout(() => {
+        document.querySelector("#contact-form-resize .Loading_Form").style.display = "none";
+        document.querySelector("#contact-form-resize .message-api").innerHTML = "حدث خطأ، الرجاء المحاولة مرة أخرى.";
+      }, 2000);
+    }
   }
 }
 
 async function RenderFormFooter() {
-  var inputElementVisa7 = document.querySelector(
-    ".username-form input[data-bc-text-input]"
-  );
-  inputElementVisa7.setAttribute("placeholder", "Name");
+  if ((lid === "1" || lang === "fa")) {
+    var inputElementVisa7 = document.querySelector(".username-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "نام");
 
-  var inputElementVisa7 = document.querySelector(
-    " .email-form input[data-bc-text-input]"
-  );
-  inputElementVisa7.setAttribute("placeholder", "Email");
+    var inputElementVisa7 = document.querySelector(".email-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "ایمیل");
 
-  var inputElementVisa7 = document.querySelector(
-    " .number-form input[data-bc-text-input]"
-  );
-  inputElementVisa7.setAttribute("placeholder", "Phone Number");
+    var inputElementVisa7 = document.querySelector(".number-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "شماره تلفن");
 
-  var inputElementVisa7 = document.querySelector(
-    " .message-form input[data-bc-text-input]"
-  );
-  inputElementVisa7.setAttribute("placeholder", "Message");
+    var inputElementVisa7 = document.querySelector(".message-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "پیام");
+  } else if ((lid === "2" || lang === "en")) {
+    var inputElementVisa7 = document.querySelector(".username-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "Name");
+
+    var inputElementVisa7 = document.querySelector(".email-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "Email");
+
+    var inputElementVisa7 = document.querySelector(".number-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "Phone Number");
+
+    var inputElementVisa7 = document.querySelector(".message-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "Message");
+  } else if ((lid === "3" || lang === "ar")) {
+    var inputElementVisa7 = document.querySelector(".username-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "الاسم");
+
+    var inputElementVisa7 = document.querySelector(".email-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "البريد الإلكتروني");
+
+    var inputElementVisa7 = document.querySelector(".number-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "رقم الهاتف");
+
+    var inputElementVisa7 = document.querySelector(".message-form input[data-bc-text-input]");
+    inputElementVisa7.setAttribute("placeholder", "الرسالة");
+  }
 }
+
 
 if (document.querySelector(".services-swiper")) {
   var servicesSwiper = new Swiper(".services-swiper", {
